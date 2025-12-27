@@ -47,7 +47,7 @@ export class HSPEngine {
    */
   async process(action: AgentAction): Promise<HSPResult> {
     const sessionId = randomUUID();
-    
+
     // Log the request
     this.addAuditEntry({
       sessionId,
@@ -88,15 +88,15 @@ export class HSPEngine {
       sessionId,
       eventType: 'CLASSIFICATION',
       actorId: 'hsp-engine',
-      details: { 
-        level: classification.level, 
-        reason: classification.reason 
+      details: {
+        level: classification.level,
+        reason: classification.reason
       }
     });
 
     // Determine if approval is required
-    const requiresApproval = classification.level === CriticalityLevel.HIGH || 
-                             classification.level === CriticalityLevel.CRITICAL;
+    const requiresApproval = classification.level === CriticalityLevel.HIGH ||
+      classification.level === CriticalityLevel.CRITICAL;
 
     const result = this.createResult(action, sessionId, {
       criticalityLevel: classification.level,
@@ -111,7 +111,7 @@ export class HSPEngine {
         sessionId,
         eventType: 'APPROVAL_REQUEST',
         actorId: 'hsp-engine',
-        details: { 
+        details: {
           level: classification.level,
           timeout: this.config.approvalTimeout
         }
@@ -126,7 +126,7 @@ export class HSPEngine {
    */
   async processApproval(approval: HumanApproval): Promise<HSPResult> {
     const pending = this.pendingApprovals.get(approval.sessionId);
-    
+
     if (!pending) {
       throw new Error(`No pending approval found for session: ${approval.sessionId}`);
     }
@@ -283,7 +283,7 @@ export class HSPEngine {
    */
   private verifySignature(approval: HumanApproval): boolean {
     // In a real implementation, this would verify a cryptographic signature
-    return approval.signature && approval.signature.length > 0;
+    return !!(approval.signature && approval.signature.length > 0);
   }
 
   /**
@@ -313,7 +313,7 @@ export class HSPEngine {
   private addAuditEntry(params: Omit<AuditEntry, 'id' | 'timestamp' | 'hash' | 'previousHash'>): void {
     const previousEntry = this.auditLog[this.auditLog.length - 1];
     const timestamp = new Date();
-    
+
     const entry: AuditEntry = {
       id: randomUUID(),
       timestamp,
@@ -324,7 +324,7 @@ export class HSPEngine {
 
     // Calculate hash for integrity
     entry.hash = this.calculateHash(entry);
-    
+
     this.auditLog.push(entry);
   }
 
@@ -341,7 +341,7 @@ export class HSPEngine {
       details: entry.details,
       previousHash: entry.previousHash
     });
-    
+
     return createHash('sha256').update(data).digest('hex');
   }
 
@@ -359,7 +359,7 @@ export class HSPEngine {
     for (let i = 1; i < this.auditLog.length; i++) {
       const entry = this.auditLog[i];
       const previousEntry = this.auditLog[i - 1];
-      
+
       if (entry.previousHash !== previousEntry.hash) {
         return false;
       }
