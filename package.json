@@ -1,0 +1,36 @@
+{
+  "name": "@psan/protocol",
+  "version": "0.1.0",
+  "description": "Personal Sovereign Agent Network - The Foundation of Web 4.0",
+  "author": "Jaqueline Martins de Jesus",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaquetc7/PSAN-Protocol.git"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "web4",
+    "sovereignty",
+    "decentralized",
+    "identity",
+    "hsp",
+    "human-supervision"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src/",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
